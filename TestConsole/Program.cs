@@ -14,6 +14,7 @@ namespace TestConsole
 
             context.LogSQLToConsole();
 
+            
             Console.WriteLine("Hello World!");
         }
     }

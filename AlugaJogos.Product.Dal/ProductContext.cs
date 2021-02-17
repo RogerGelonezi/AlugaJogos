@@ -6,7 +6,7 @@ namespace AlugaJogos.Persistence
     public class ProductContext : DbContext
     {
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Product> Products { get; set; }
+        public DbSet<Model.Product> Products { get; set; }
         public DbSet<ProductFile> ProductFiles { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductPropertie> ProductProperties { get; set; }
@@ -17,7 +17,7 @@ namespace AlugaJogos.Persistence
         
         public ProductContext()
         {
-
+            // this.Database.EnsureCreated();
         }
 
         public ProductContext(DbContextOptions<ProductContext> options)
@@ -32,5 +32,10 @@ namespace AlugaJogos.Persistence
             base.OnConfiguring(optionsBuilder);
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration<Propertie>(new PropertieConfiguration());
+        }
     }
 }

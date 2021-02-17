@@ -16,5 +16,6 @@ namespace AlugaJogos.Model
         public bool Filterable { get; set; }
         public string DefaultValue { get; set; }
         public IList<PropertieDefaultOptions> DefaultOptions { get; set; }
+        public bool CriticalPropertie { get; set; }
     }
 }
