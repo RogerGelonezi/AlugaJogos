@@ -1,2 +1,2 @@
 # AlugaJogos
-C# Project for studies and training
+It's my little C# Project for studies and training.
