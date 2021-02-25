@@ -1,12 +1,19 @@
+using AlugaJogos.Model;
+using AlugaJogos.Persistence;
+using AlugaJogos.Product.Api.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,12 +33,81 @@ namespace AlugaJogos.Product.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ProductContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("ProductDb"));
+            });
+            services.AddTransient<IRepository<Propertie>, ProductRepository<Propertie>>();
+            services.AddTransient<IRepository<PropertieGroup>, ProductRepository<PropertieGroup>>();
+
+            services.AddMvc(options =>
+            {
+                options.Filters.Add(typeof(ErrorResponseFilter));
+            }).AddXmlSerializerFormatters();
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
+            //services.AddApiVersioning(options =>
+            //{
+            //    options.ApiVersionReader = ApiVersionReader.Combine(
+            //        new QueryStringApiVersionReader("api-version"),
+            //        new HeaderApiVersionReader("api-version"));
+            //});
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "JwtBearer";
+                options.DefaultChallengeScheme = "JwtBearer";
+            }).AddJwtBearer("JwtBearer", options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes("aluga-jogos-authentication-valid")),
+                    ClockSkew = TimeSpan.FromMinutes(5),
+                    ValidIssuer = "AlugaJogos",
+                    ValidAudience = "Postman",
+                };
+            });
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "AlugaJogos.Product.Api", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Aluga Jogos API",
+                    Description = "API Documentation",
+                    Version = "v1"
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    BearerFormat = "apiKey",
+                    Description = "Bearer Authentication by JWT"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "JwtBearer" }
+                        },
+                        new[] { "readAccess", "writeAccess" }
+                    }
+                });
+                c.OperationFilter<ApiResponsesOperationFilter>();
+                c.DocumentFilter<TagDescriptionsDocumentFilter>();
             });
+
+            services.AddControllersWithViews()
+                    .AddNewtonsoftJson(options =>
+                        options.SerializerSettings.Converters.Add(new StringEnumConverter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,12 +118,13 @@ namespace AlugaJogos.Product.Api
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "AlugaJogos.Product.Api v1"));
-            }
+            };
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
+            // app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

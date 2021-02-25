@@ -14,25 +14,25 @@ namespace AlugaJogos.Persistence
 
         public IQueryable<TEntity> All => _context.Set<TEntity>().AsQueryable();
 
-        public void Alterar(params TEntity[] obj)
+        public void Alter(params TEntity[] obj)
         {
             _context.Set<TEntity>().UpdateRange(obj);
             _context.SaveChanges();
         }
 
-        public async Task AlterarAsync(params TEntity[] obj)
+        public async Task AlterAsync(params TEntity[] obj)
         {
             _context.Set<TEntity>().UpdateRange(obj);
             await _context.SaveChangesAsync();
         }
 
-        public void Excluir(params TEntity[] obj)
+        public void Delete(params TEntity[] obj)
         {
             _context.Set<TEntity>().RemoveRange(obj);
             _context.SaveChanges();
         }
 
-        public async Task ExcluirAsync(params TEntity[] obj)
+        public async Task DeleteAsync(params TEntity[] obj)
         {
             _context.Set<TEntity>().RemoveRange(obj);
             await _context.SaveChangesAsync();
@@ -48,13 +48,13 @@ namespace AlugaJogos.Persistence
             return await _context.FindAsync<TEntity>(key);
         }
 
-        public void Incluir(params TEntity[] obj)
+        public void Save(params TEntity[] obj)
         {
             _context.Set<TEntity>().AddRange(obj);
             _context.SaveChanges();
         }
 
-        public async Task IncluirAsync(params TEntity[] obj)
+        public async Task SaveAsync(params TEntity[] obj)
         {
             _context.Set<TEntity>().AddRange(obj);
             await _context.SaveChangesAsync();

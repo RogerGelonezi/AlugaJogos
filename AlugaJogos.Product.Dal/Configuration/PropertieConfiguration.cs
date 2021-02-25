@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AlugaJogos.Persistence
 {
-    public class PropertieConfiguration : IEntityTypeConfiguration<Propertie>
+    internal class PropertieConfiguration : IEntityTypeConfiguration<Propertie>
     {
         public void Configure(EntityTypeBuilder<Propertie> builder)
         {

@@ -10,13 +10,13 @@ namespace AlugaJogos.Persistence
         TEntity Find(int key);
         Task<TEntity> FindAsync(int key);
 
-        void Incluir(params TEntity[] obj);
-        Task IncluirAsync(params TEntity[] obj);
+        void Save(params TEntity[] obj);
+        Task SaveAsync(params TEntity[] obj);
 
-        void Alterar(params TEntity[] obj);
-        Task AlterarAsync(params TEntity[] obj);
+        void Alter(params TEntity[] obj);
+        Task AlterAsync(params TEntity[] obj);
 
-        void Excluir(params TEntity[] obj);
-        Task ExcluirAsync(params TEntity[] obj);
+        void Delete(params TEntity[] obj);
+        Task DeleteAsync(params TEntity[] obj);
     }
 }

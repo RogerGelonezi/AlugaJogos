@@ -4,7 +4,7 @@ using System.Text;
 
 namespace AlugaJogos.Model
 {
-    public class PropertieGroup
+    public class PropertieGroup : IClass
     {
         public int Id { get; set; }
         public string Description { get; set; }

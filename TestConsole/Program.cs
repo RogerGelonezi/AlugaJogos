@@ -8,12 +8,13 @@ namespace TestConsole
 {
     public class Program
     {
-        public static void Main(string[] args)
+        static async System.Threading.Tasks.Task Main(string[] args)
         {
             var context = new ProductContext();
 
             context.LogSQLToConsole();
 
+            var products = await context.Products.ToListAsync();
             
             Console.WriteLine("Hello World!");
         }
