@@ -17,6 +17,7 @@ namespace AlugaJogos.Product.Api.Controllers
     [ApiController]
     [ApiExplorerSettings(GroupName = "v1")]
     [ApiVersion("1.0")]
+    [Produces("application/json")]
     public class PropertieGroupsController : ControllerBase
     {
         private readonly IRepository<PropertieGroup> _repo;
@@ -26,54 +27,137 @@ namespace AlugaJogos.Product.Api.Controllers
             _repo = repo;
         }
 
+        /// <summary>
+        /// Gets the list of saved propertie groups
+        /// </summary>
+        /// <param name="order">Order By</param>
+        /// <param name="pagination">Witch page you are on</param>
+        /// <returns>A list of Propertie Groups</returns>
+        /// <response code="400">Bad Request</response>   
         [HttpGet]
         public async Task<IActionResult> PropertieGroupsList(
-            // [FromQuery] PropertieGroupFilter filter,
+            // [FromQuery] PropertieGroupParams params,
             [FromQuery] Order order,
             [FromQuery] Pagination pagination)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var lista = await _repo
-                    .All
-                    .ApplyOrder(order)
-                    .ToPagedAsync(pagination, "propertieGroups");
-                return Ok(lista);
+                return BadRequest(ErrorResponse.FromModelState(ModelState));
             }
 
-            return BadRequest();
+            var lista = await _repo
+                .All
+                .ApplyOrder(order)
+                .ToPagedAsync(pagination, "propertieGroups");
+
+            return Ok(lista);
         }
 
-        // GET api/<PropertieGroupsController>/5
+        /// <summary>
+        /// Get Propertie Group by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="400">Bad Request</response>
+        /// <response code="404">Not Found</response>
         [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return "value";
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorResponse.FromModelState(ModelState));
+            }
+
+            var propertieGroup = await _repo.FindAsync(id);
+            if (propertieGroup == null || propertieGroup.Id == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(propertieGroup);
         }
 
-        // POST api/<PropertieGroupsController>
+        /// <summary>
+        /// Save a new register
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <response code="400">Bad Request</response>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PropertieGroup model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _repo.SaveAsync(model);
-                return Ok(model);
+                return BadRequest(ErrorResponse.FromModelState(ModelState));
+            }
+            if (string.IsNullOrEmpty(model.Description))
+            {
+                return BadRequest(ErrorResponse.FromBadRequest("Description field is mandatory"));
+            }
+            if (model.Id != 0)
+            {
+                return BadRequest(ErrorResponse.FromBadRequest("Post method saves a new register.", "You must send Id = 0"));
             }
 
-            return BadRequest();
+            await _repo.SaveAsync(model);
+
+            var uri = Url.Action("Get", new { id = model.Id });
+            return Created(uri, model);
         }
 
-        // PUT api/<PropertieGroupsController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        /// <summary>
+        /// Alter an existent register
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <response code="400">Bad Request</response>
+        [HttpPut]
+        public async Task<IActionResult> Put([FromBody] PropertieGroup model)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorResponse.FromModelState(ModelState));
+            }
+            if (string.IsNullOrEmpty(model.Description))
+            {
+                return BadRequest(ErrorResponse.FromBadRequest("Description field is mandatory"));
+            }
+            if (model.Id == 0)
+            {
+                return BadRequest(ErrorResponse.FromBadRequest("No current register", "The Put method alter an existing register, to save a new register, use the Post Method"));
+            }
+
+            await _repo.AlterAsync(model);
+
+            return Ok(model);
         }
 
-        // DELETE api/<PropertieGroupsController>/5
+        /// <summary>
+        /// Deletes an existent register
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <response code="400">Bad Request</response>
+        /// <response code="404">Not Found</response>
+        /// <response code="204">No Content</response>
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ErrorResponse.FromModelState(ModelState));
+            }
+
+            var model = await _repo.FindAsync(id);
+
+            if (model == null || model.Id == 0)
+            {
+                return NotFound();
+            }
+
+            await _repo.DeleteAsync(model);
+
+            return NoContent();
         }
     }
 }

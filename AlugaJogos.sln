@@ -21,7 +21,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlugaJogos.Repository", "Al
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsole", "TestConsole\TestConsole.csproj", "{4FC46A91-269A-4EE7-8D00-C1ED1BD574A0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlugaJogos.Product.Api", "AlugaJogos.Product.Api\AlugaJogos.Product.Api.csproj", "{70CDB9BE-1E6C-40D6-AB60-47B094291571}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlugaJogos.Product.Api", "AlugaJogos.Product.Api\AlugaJogos.Product.Api.csproj", "{70CDB9BE-1E6C-40D6-AB60-47B094291571}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D56D41B8-FE59-4DC4-8979-D606261B9164}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

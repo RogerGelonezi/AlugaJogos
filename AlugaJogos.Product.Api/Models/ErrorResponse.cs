@@ -13,6 +13,17 @@ namespace AlugaJogos.Product.Api.Models
         public ErrorResponse InnerError { get; set; }
         public string[] Details { get; set; }
 
+        public static ErrorResponse FromBadRequest(string message, string detail = null)
+        {
+            var details = new string[] { detail };
+
+            return new ErrorResponse
+            {
+                Code = 400,
+                Message = message,
+                Details = details,
+            };
+        }
         public static ErrorResponse FromException(Exception ex)
         {
             if (ex == null)

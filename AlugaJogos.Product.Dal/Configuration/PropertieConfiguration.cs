@@ -13,13 +13,7 @@ namespace AlugaJogos.Persistence
     {
         public void Configure(EntityTypeBuilder<Propertie> builder)
         {
-            //builder.HasData(new Propertie
-            //{
-            //    Description = "Name",
-            //    PropertieType = PropertieType.String,
-            //    Order = 1,
-            //    ...
-            //});
+            
         }
     }
 }

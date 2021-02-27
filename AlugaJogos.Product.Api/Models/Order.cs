@@ -7,8 +7,8 @@ namespace AlugaJogos.Product.Api.Models
 {
     public class Order
     {
-        public string PrimaryPriority { get; set; }
-        public string SecondaryPriority { get; set; }
-        public string ThirdyPriority { get; set; }
+        public string OrderPrimaryPriority { get; set; }
+        public string OrderSecondaryPriority { get; set; }
+        public string OrderThirdyPriority { get; set; }
     }
 }

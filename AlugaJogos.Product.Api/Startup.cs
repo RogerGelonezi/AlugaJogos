@@ -16,7 +16,9 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace AlugaJogos.Product.Api
@@ -43,7 +45,7 @@ namespace AlugaJogos.Product.Api
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ErrorResponseFilter));
-            }).AddXmlSerializerFormatters();
+            });
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
@@ -103,11 +105,21 @@ namespace AlugaJogos.Product.Api
                 });
                 c.OperationFilter<ApiResponsesOperationFilter>();
                 c.DocumentFilter<TagDescriptionsDocumentFilter>();
+
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
 
             services.AddControllersWithViews()
                     .AddNewtonsoftJson(options =>
                         options.SerializerSettings.Converters.Add(new StringEnumConverter()));
+
+            services.AddSwaggerGenNewtonsoftSupport();
+
+            services.AddMvc()
+                .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

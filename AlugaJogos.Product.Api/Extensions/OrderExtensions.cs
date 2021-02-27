@@ -12,19 +12,19 @@ namespace AlugaJogos.Product.Api.Extensions
         {
             if (order != null)
             {
-                if (!string.IsNullOrEmpty(order.ThirdyPriority))
+                if (!string.IsNullOrEmpty(order.OrderThirdyPriority))
                 {
-                    query = query.OrderBy(order.ThirdyPriority);
+                    query = query.OrderBy(order.OrderThirdyPriority);
                 }
 
-                if (!string.IsNullOrEmpty(order.SecondaryPriority))
+                if (!string.IsNullOrEmpty(order.OrderSecondaryPriority))
                 {
-                    query = query.OrderBy(order.SecondaryPriority);
+                    query = query.OrderBy(order.OrderSecondaryPriority);
                 }
 
-                if (!string.IsNullOrEmpty(order.PrimaryPriority))
+                if (!string.IsNullOrEmpty(order.OrderPrimaryPriority))
                 {
-                    query = query.OrderBy(order.PrimaryPriority);
+                    query = query.OrderBy(order.OrderPrimaryPriority);
                 }
             }
 

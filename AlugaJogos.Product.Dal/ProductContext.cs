@@ -29,7 +29,7 @@ namespace AlugaJogos.Persistence
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // optionsBuilder.UseSqlServer("Data Source=ROGER-EUMESMO\\SQLROGER;Initial Catalog=AlugaJogos.Products;Persist Security Info=True;User ID=sa;Password=freakzoid");
-            // optionsBuilder.UseSqlServer("Data Source=192.168.56.1;Initial Catalog=AlugaJogos.Products;Persist Security Info=True;User ID=sa;Password=#Rogerio123");
+            optionsBuilder.UseSqlServer("Data Source=192.168.56.1;Initial Catalog=AlugaJogos.Products;Persist Security Info=True;User ID=sa;Password=#Rogerio123");
             base.OnConfiguring(optionsBuilder);
         } // ROGER-EUMESMO\\SQLROGER
 
@@ -37,6 +37,7 @@ namespace AlugaJogos.Persistence
         {
             base.OnModelCreating(builder);
             builder.ApplyConfiguration<Propertie>(new PropertieConfiguration());
+            builder.ApplyConfiguration<PropertieGroup>(new PropertieGroupConfiguration());
         }
     }
 }
