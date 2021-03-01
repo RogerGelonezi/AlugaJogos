@@ -9,7 +9,7 @@ namespace AlugaJogos.Product.Api.Filters
         public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
         {
             swaggerDoc.Tags = new List<OpenApiTag> {
-                new OpenApiTag { Name = "PropertieGroups", Description = "Organizes properties in group tabs." },
+                new OpenApiTag { Name = "PropertyGroups", Description = "Organizes properties in group tabs." },
                 new OpenApiTag { Name = "Properties", Description = "Defines the possible characteristics of the products." }
             };
         }

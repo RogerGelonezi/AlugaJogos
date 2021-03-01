@@ -9,11 +9,11 @@ namespace AlugaJogos.Persistence
         public DbSet<Model.Product> Products { get; set; }
         public DbSet<ProductFile> ProductFiles { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
-        public DbSet<ProductPropertie> ProductProperties { get; set; }
+        public DbSet<ProductProperty> ProductProperties { get; set; }
         public DbSet<ProductVideo> ProductVideos { get; set; }
-        public DbSet<Propertie> Properties { get; set; }
-        public DbSet<PropertieDefaultOptions> PropertieDefaults { get; set; }
-        public DbSet<PropertieGroup> PropertieGroups { get; set; }
+        public DbSet<Property> Properties { get; set; }
+        public DbSet<PropertyDefaultOption> PropertieDefaults { get; set; }
+        public DbSet<PropertyGroup> PropertieGroups { get; set; }
         
         public ProductContext()
         {
@@ -36,8 +36,8 @@ namespace AlugaJogos.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration<Propertie>(new PropertieConfiguration());
-            builder.ApplyConfiguration<PropertieGroup>(new PropertieGroupConfiguration());
+            builder.ApplyConfiguration<Property>(new PropertieConfiguration());
+            builder.ApplyConfiguration<PropertyGroup>(new PropertieGroupConfiguration());
         }
     }
 }

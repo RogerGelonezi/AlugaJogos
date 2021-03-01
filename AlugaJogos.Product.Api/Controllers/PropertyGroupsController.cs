@@ -8,29 +8,29 @@ using System.Threading.Tasks;
 
 namespace AlugaJogos.Product.Api.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
     [ApiExplorerSettings(GroupName = "v1")]
-    [Route("api/[controller]")]
     [ApiVersion("1.0")]
-    public class PropertiesController : AbstractController<Property>
+    [Produces("application/json")]
+    public class PropertyGroupsController : AbstractController<PropertyGroup>
     {
-        public PropertiesController(IRepository<Property> repo)
+        public PropertyGroupsController(IRepository<PropertyGroup> repo)
         {
             _repo = repo;
         }
 
         /// <summary>
-        /// Return a list of properties
+        /// Return a list of saved property groups
         /// </summary>
         /// <param name="description"></param>
-        /// <param name="propertyGroupId"></param>
-        /// <param name="order"></param>
-        /// <param name="pagination"></param>
-        /// <returns></returns>
+        /// <param name="order">Order By</param>
+        /// <param name="pagination">Witch page you are on</param>
+        /// <returns>A list of Property Groups</returns>
+        /// <response code="400">Bad Request</response>   
         [HttpGet]
-        public async Task<IActionResult> PropertiesList(
+        public async Task<IActionResult> PropertyGroupsList(
             [FromQuery] string description,
-            [FromQuery] int propertyGroupId,
             [FromQuery] Order order,
             [FromQuery] Pagination pagination)
         {
@@ -40,18 +40,13 @@ namespace AlugaJogos.Product.Api.Controllers
             }
 
             var list = _repo.All;
-
             if (!string.IsNullOrEmpty(description))
             {
-                list.Where(p => p.Description.Contains(description));
+                list.Where(g => g.Description.Contains(description));
             }
-            if (propertyGroupId > 0)
-            {
-                list.Where(p => p.Group.Id == propertyGroupId);
-            }
-            
+
             await list.ApplyOrder(order)
-                .ToPagedAsync(pagination, "properties");
+                .ToPagedAsync(pagination, "propertyGroups");
 
             return Ok(list);
         }

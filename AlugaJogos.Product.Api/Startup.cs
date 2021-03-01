@@ -3,23 +3,17 @@ using AlugaJogos.Persistence;
 using AlugaJogos.Product.Api.Filters;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace AlugaJogos.Product.Api
 {
@@ -39,8 +33,8 @@ namespace AlugaJogos.Product.Api
             {
                 options.UseSqlServer(Configuration.GetConnectionString("ProductDb"));
             });
-            services.AddTransient<IRepository<Propertie>, ProductRepository<Propertie>>();
-            services.AddTransient<IRepository<PropertieGroup>, ProductRepository<PropertieGroup>>();
+            services.AddTransient<IRepository<Property>, ProductRepository<Property>>();
+            services.AddTransient<IRepository<PropertyGroup>, ProductRepository<PropertyGroup>>();
 
             services.AddMvc(options =>
             {
@@ -84,7 +78,7 @@ namespace AlugaJogos.Product.Api
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Aluga Jogos API",
-                    Description = "API Documentation",
+                    Description = "by Rogerio Gelonezi, Twitter @roger_eumesmo",
                     Version = "v1"
                 });
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
